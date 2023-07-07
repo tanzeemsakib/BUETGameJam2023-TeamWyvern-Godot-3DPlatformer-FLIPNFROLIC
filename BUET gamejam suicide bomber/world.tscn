@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhe5pdg1flq2c"]
+
+[ext_resource type="PackedScene" uid="uid://cwm5wxctfgl4w" path="res://floor.tscn" id="1_ms2bi"]
+[ext_resource type="PackedScene" uid="uid://b4106pk0detwn" path="res://player.tscn" id="2_tx40y"]
+
+[sub_resource type="GDScript" id="GDScript_2ogi7"]
+script/source = "extends TileMap
+
+var selectedTile
+
+func _process(delta):
+	var tile = local_to_map(get_global_mouse_position())
+	selectedTile = map_to_local(tile)
+"
+
+[node name="world" type="Node2D"]
+
+[node name="TileMap" parent="." instance=ExtResource("1_ms2bi")]
+y_sort_enabled = true
+position = Vector2(0, 0)
+layer_0/tile_data = PackedInt32Array(720901, 0, 12, 655366, 0, 12, 655365, 0, 12, 786438, 0, 12, 786437, 0, 12, 851973, 0, 12, 720902, 0, 12, 720900, 0, 12, 589829, 0, 12, 917510, 0, 12, 851974, 0, 12, 786439, 0, 12, 786436, 0, 12, 851972, 0, 12, 917509, 0, 12, 983045, 0, 12, 524294, 0, 12, 589830, 0, 12, 655367, 0, 12, 720903, 0, 12, 917508, 0, 12, 983044, 0, 12, 1048581, 0, 12, 1048582, 0, 12, 983046, 0, 12, 917511, 0, 12, 851975, 0, 12, 786440, 0, 12, 589831, 0, 12, 524295, 0, 12, 655368, 0, 12, 1114117, 0, 12, 720904, 0, 12, 1179654, 0, 12, 1114118, 0, 12, 1048583, 0, 12, 983047, 0, 12, 917512, 0, 12, 851976, 0, 12, 786441, 0, 12, 1179655, 0, 12, 1114119, 0, 12, 1048584, 0, 12, 983048, 0, 12, 917513, 0, 12)
+script = SubResource("GDScript_2ogi7")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+limit_left = 0
+limit_top = 0
+
+[node name="bomber" parent="." instance=ExtResource("2_tx40y")]
+position = Vector2(138, 61)

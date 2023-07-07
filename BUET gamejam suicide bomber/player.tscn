@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4106pk0detwn"]
+
+[ext_resource type="Script" path="res://bomber.gd" id="1_ley8a"]
+[ext_resource type="Texture2D" uid="uid://ihrgxofijvog" path="res://icon.svg" id="2_0yr50"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nbr25"]
+
+[node name="bomber" type="CharacterBody2D"]
+script = ExtResource("1_ley8a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_nbr25")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(9.53674e-07, 0)
+scale = Vector2(0.15625, 0.15625)
+texture = ExtResource("2_0yr50")
