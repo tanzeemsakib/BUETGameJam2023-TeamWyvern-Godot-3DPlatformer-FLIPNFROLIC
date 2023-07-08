@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://ep41yj6ah75m"]
+
+[ext_resource type="PackedScene" uid="uid://cfeeo2s0c72x0" path="res://player.tscn" id="1_70upt"]
+[ext_resource type="Texture2D" uid="uid://debnadl06kbys" path="res://fajrbackgroundcaniaeast.png" id="2_8sr4w"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_oqx40"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ijc3t"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_y3wwu"]
+panorama = ExtResource("2_8sr4w")
+
+[sub_resource type="Sky" id="Sky_5xkfs"]
+sky_material = SubResource("PanoramaSkyMaterial_y3wwu")
+
+[sub_resource type="Environment" id="Environment_mc6xg"]
+background_mode = 2
+sky = SubResource("Sky_5xkfs")
+
+[node name="world" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 0.3, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_oqx40")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_ijc3t")
+
+[node name="player" parent="." instance=ExtResource("1_70upt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.709023, 0.228823, 1.26381)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_mc6xg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.991067, -0.0444172, 0.125749, -0.00569947, 0.956153, 0.292813, -0.133242, 0.289481, -0.947865, 0.991447, 4.4808, -8.87054)
+shadow_enabled = true
