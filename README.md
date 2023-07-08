@@ -1,2 +1,2 @@
 # BUETGameJamTeamWyvernGodotProject
-codename "suicide bomber"
+codename "bouncer"
