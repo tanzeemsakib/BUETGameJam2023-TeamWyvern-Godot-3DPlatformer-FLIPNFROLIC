@@ -1,0 +1,103 @@
+[gd_scene load_steps=8 format=3 uid="uid://dmi3ewie6kyxl"]
+
+[ext_resource type="Texture2D" uid="uid://c6x00n11fn4es" path="res://heart collectible sheet.png" id="1_satys"]
+[ext_resource type="AudioStream" uid="uid://df3c7t3fb48k7" path="res://collectible.mp3" id="2_kdjpy"]
+
+[sub_resource type="GDScript" id="GDScript_277jc"]
+script/source = "extends Area3D
+
+@onready var animation = $AnimationPlayer
+@onready var collectible = $AudioStreamPlayer
+var enemyScene:PackedScene = load(\"res://enemy.tscn\")
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	animation.play(\"collectible\")
+
+func _play_sound():
+	collectible.stream = load(\"res://collectible.mp3\")
+	collectible.collectible.finished.connect(queue_free)
+	add_child(collectible)
+	collectible.play()
+
+func _on_body_entered(body):
+	if body.is_in_group(\"player\"):
+		Game.points += 50
+		var enemyNode:Node = enemyScene.instantiate()
+		add_sibling(enemyNode)
+		enemyNode.position = self.position + (Vector3.UP * 10)
+		queue_free()
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lltlj"]
+size = Vector3(0.720181, 0.748587, 0.656381)
+
+[sub_resource type="Animation" id="Animation_7vkuk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_pgk85"]
+resource_name = "collectible"
+length = 1.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7b2fs"]
+_data = {
+"RESET": SubResource("Animation_7vkuk"),
+"collectible": SubResource("Animation_pgk85")
+}
+
+[node name="collectible" type="Node3D"]
+
+[node name="Area3D" type="Area3D" parent="."]
+script = SubResource("GDScript_277jc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_lltlj")
+
+[node name="Sprite3D" type="Sprite3D" parent="Area3D"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
+billboard = 2
+shaded = true
+alpha_cut = 2
+texture_filter = 0
+texture = ExtResource("1_satys")
+hframes = 3
+vframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Area3D"]
+libraries = {
+"": SubResource("AnimationLibrary_7b2fs")
+}
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Area3D"]
+stream = ExtResource("2_kdjpy")
+
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
