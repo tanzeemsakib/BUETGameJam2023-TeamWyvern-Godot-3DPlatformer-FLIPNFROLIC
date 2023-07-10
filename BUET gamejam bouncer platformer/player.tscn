@@ -1,0 +1,152 @@
+[gd_scene load_steps=9 format=3 uid="uid://cfeeo2s0c72x0"]
+
+[ext_resource type="Texture2D" uid="uid://ceporbdvp8j1t" path="res://satyr character sheet.png" id="1_yd8ey"]
+[ext_resource type="AudioStream" uid="uid://c0wbrju1sn42p" path="res://jump.mp3" id="2_ngisq"]
+
+[sub_resource type="GDScript" id="GDScript_w1xup"]
+script/source = "extends CharacterBody3D
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
+
+@onready var camerabase = $CameraBase
+@onready var animation = $AnimationPlayer
+@onready var jump = $jump
+
+func _ready():
+	Input.mouse_mode = 2
+
+func _input(event):
+	if event is InputEventMouseMotion:
+		camerabase.rotation.x -= deg_to_rad(event.relative.x * 1)
+		camerabase.rotation.x = clamp(camerabase.rotation.x, deg_to_rad(-15), deg_to_rad(15))
+		rotation.y -= deg_to_rad(event.relative.x * 1)
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
+	# Handle Jump.
+	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
+		velocity.y = Game.jump
+		animation.play(\"jump\")
+		jump.play()
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir = Input.get_vector(\"right\", \"left\", \"backward\", \"forward\")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * Game.speed
+		velocity.z = direction.z * Game.speed
+		animation.play(\"walk\")
+	else:
+		velocity.x = move_toward(velocity.x, 0, Game.speed)
+		velocity.z = move_toward(velocity.z, 0, Game.speed)
+		animation.play(\"idle\")
+
+	move_and_slide()
+	
+	if Game.health <= 0:
+		queue_free()
+		get_tree().change_scene_to_file(\"res://game_over.tscn\")
+		Input.mouse_mode = 0
+	
+	if global_position.y < -5:
+		Game.points = 0
+		Game.speed = 1.0
+		Game.health -= 5
+		game_over()
+	
+func game_over():
+	get_tree().reload_current_scene()	
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qd1ml"]
+radius = 0.0521503
+height = 0.160686
+
+[sub_resource type="Animation" id="Animation_sq307"]
+resource_name = "idle"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_4oto1"]
+resource_name = "jump"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [18, 19, 20]
+}
+
+[sub_resource type="Animation" id="Animation_671o7"]
+resource_name = "walk"
+length = 1.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [9, 10, 11, 12, 13, 14, 15, 16]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8kv80"]
+_data = {
+"idle": SubResource("Animation_sq307"),
+"jump": SubResource("Animation_4oto1"),
+"walk": SubResource("Animation_671o7")
+}
+
+[node name="player" type="CharacterBody3D" groups=["player"]]
+script = SubResource("GDScript_w1xup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00232661, -0.0277085, -0.0151603)
+shape = SubResource("CapsuleShape3D_qd1ml")
+
+[node name="CameraBase" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraBase"]
+transform = Transform3D(-0.999755, -0.00440425, -0.0216947, -0.0106769, 0.954423, 0.298267, 0.0193922, 0.298426, -0.954236, -0.00384521, 0.308958, -1.04257)
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+billboard = 2
+shaded = true
+alpha_cut = 2
+texture_filter = 0
+texture = ExtResource("1_yd8ey")
+hframes = 9
+vframes = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_8kv80")
+}
+
+[node name="jump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_ngisq")

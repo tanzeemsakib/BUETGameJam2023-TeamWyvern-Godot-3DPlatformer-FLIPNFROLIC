@@ -1,0 +1,71 @@
+[gd_scene load_steps=5 format=3 uid="uid://brv4aq6mmj3m0"]
+
+[ext_resource type="Texture2D" uid="uid://debnadl06kbys" path="res://fajrbackgroundcaniaeast.png" id="1_2kmvi"]
+[ext_resource type="Theme" uid="uid://b6cw8oaws3ysk" path="res://default.tres" id="2_udyyq"]
+[ext_resource type="FontFile" uid="uid://cdhhx1lmt7lnc" path="res://ui font.ttf" id="3_abijc"]
+
+[sub_resource type="GDScript" id="GDScript_u5x46"]
+script/source = "extends Control
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+
+func _on_i_understand_pressed():
+	get_tree().change_scene_to_file(\"res://controls.tscn\")
+"
+
+[node name="CrypticText" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_u5x46")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("1_2kmvi")
+
+[node name="i understand" type="Button" parent="TextureRect"]
+layout_mode = 2
+offset_left = 428.0
+offset_top = 430.0
+offset_right = 728.0
+offset_bottom = 630.0
+theme = ExtResource("2_udyyq")
+text = "I understand"
+
+[node name="Label" type="Label" parent="TextureRect"]
+layout_mode = 0
+offset_left = 428.0
+offset_top = 48.0
+offset_right = 733.0
+offset_bottom = 396.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_abijc")
+theme_override_font_sizes/font_size = 25
+text = "You seek to escape 5
+levels wherein only at
+the end does lie fortune.
+Gather sacrificial points
+as payment for locks to
+be turned and for your
+misery to be burdened.
+Trust no item you find 
+as every ease you might
+find will trouble you five
+fold. And remember, you
+are your worst enemy."
+
+[connection signal="pressed" from="TextureRect/i understand" to="." method="_on_i_understand_pressed"]
