@@ -10,7 +10,7 @@ The theme for the BUET CSE Fest Game Jam 2023 was "you are your own enemy." With
 
 ![three](screencaps/three.jpg)
 
-[![Gameply Overview Trailer](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=https://youtu.be/nxUEooXWGLM?si=XaS8rsvD5KwsGtM3)
+[![Gameplay Overview Trailer](https://img.youtube.com/vi/nxUEooXWGLM/hqdefault.jpg)](https://youtu.be/nxUEooXWGLM)
 
 assets used:
 
