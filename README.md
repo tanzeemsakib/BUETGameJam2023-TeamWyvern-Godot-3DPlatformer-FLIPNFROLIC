@@ -1,7 +1,8 @@
-# BUETGameJamTeamWyvernGodotProject
+# BUETGameJam2023-TeamWyvern-Godot-FLIPNFROLIC
 ## gamename: FLIP 'N' FROLIC
 
 assets used:
+
 https://caniaeast.itch.io/simple-sky-pixel-backgrounds
 
 https://lucky-loops.itch.io/character-satyr
